@@ -192,33 +192,17 @@ def find_most_common_cooccurring_hashtag(tweet_data, hashtag_to_ignore):
 
     '''
     # TODO: Implement function
-    hashtag_to_ignore = hashtag.replace('#', '')
-    entities = []
-    for items in tweet_data['statuses']:
-        entities.append(items['entities']['hashtags'])
-    hashtags = []
-    length = len(entities)
-    for i in range(length):
-        if len(entities[i]) > 1:
-            hashtags.append(entities[i])
-        else:
-            pass
-    tag_2 = []
-    length_2 = len(hashtags)
-    for i in range(length_2):
-        for z in range(len(hashtags[i])):
-            tag_2.append(hashtags[i][z]['text'].lower())
-    for items in tag_2[:]:
-        if items.lower() == hashtag_to_ignore.lower():
-            tag_2.remove(items)
-    frequencies = {}
-    for items in tag_2:
-        if items in frequencies:
-            frequencies[items] += 1
-        else:
-            frequencies[items] = 1
-    sorted_frequencies = sorted(frequencies.items(), key = lambda x: x[1], reverse = True)
-    return sorted_frequencies[0][0]
+    hashtag_list = []
+    value_list = []
+    for items in tweet_data.values():
+        value_list.append(items)
+        statuses = value_list[0]
+        for member in statuses:
+            for tags in member['entities']['hashtags']:
+                if '#' + tags['text'].lower() != hashtag_to_ignore.lower():
+                    hashtag_list.append(tags['text'].lower())
+        most_common_cooccurring_hashtag = max(hashtag_list, key = hashtag_list.count)
+    return most_common_cooccurring_hashtag
     ''' Hint: In case you're confused about the hashtag_to_ignore 
     parameter, we want to ignore the hashtag we queried because it would 
     definitely be the most occurring hashtag, and we're trying to find 
